@@ -4,11 +4,11 @@ dotenv.config();
 
 
 // database connection establish checking
-exports.connect = ()=>{
+export const connectDB = ()=>{
 mongoose.connect(process.env.MONGODB_URL,
     {
         useNewUrlParser:true,
-        useUnifiedTopolog:true,
+        useUnifiedTopology:true,
     })
     .then(()=>{
         console.log("Database connected successfully!");
@@ -19,3 +19,4 @@ mongoose.connect(process.env.MONGODB_URL,
         process.exit(1);
     })
 }
+
