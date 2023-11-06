@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import {userModel} from "../models/User.model.js";
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv"
+dotenv.config();
 
 // signup routes handler
 export const signup = async(req,res)=>{
@@ -32,13 +34,14 @@ export const signup = async(req,res)=>{
         }
 
         // create and insert entry into database
-        const user = await userModel.create({
+        let user = await userModel.create({
             name,email,password:hashpass,role,
         });
 
         return res.status(200).json({
             success:true,
             message:"User Created Successfully",
+            data : user,
         });
 
     }
@@ -89,7 +92,7 @@ export const login = async(req,res)=>{
         if(await bcrypt.compare(password,user.password))
         {
             // password match
-           const token = jwt.sign(payload,process.env.JWT_SECRECT,{
+           let token = jwt.sign(payload,process.env.JWT_SECRECT,{
                 expiresIn:"2h",
             });
             user = user.toObject();
@@ -98,7 +101,7 @@ export const login = async(req,res)=>{
            
 
             const options = {
-                expires: new Date(Date.now()+3*24*60*60*1000),
+                expires: new Date(Date.now()+30000),
                 httpOnly:true,
             }
 
@@ -109,6 +112,8 @@ export const login = async(req,res)=>{
                 user,
                 message:"User Logged in Successfully",
             });
+   
+           
         }
         else
         {
