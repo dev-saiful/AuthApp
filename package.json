@@ -13,10 +13,10 @@
   "scripts": {
   
     
-  "start": "nodemon index,js",
+  "start": "node index.js",
   
     
-  "test": "echo \"Error: no test specified\" && exit 1"
+  "test": "echo \"Error: no test specified\" "
   
   },
   
@@ -44,7 +44,7 @@
   
   "keywords": [],
   
-  "author": "",
+  "author": "Saiful Islam",
   
   "license": "ISC",
   
