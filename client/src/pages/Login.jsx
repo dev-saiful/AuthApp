@@ -1,13 +1,44 @@
-import React from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {useSigninMutation} from "../slices/usersApiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { setCredentials } from "../slices/authSlice";
+import {toast} from "react-toastify";
 
-function Login() {
+const Login = ()=> {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+ const [signin,{isLoading} ] = useSigninMutation();
+  const { userInfo } = useSelector((state) => state.auth);
+
+  // check if user already login
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [navigate,userInfo]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await signin({email,password}).unwrap();
+      dispatch(setCredentials({...res}))
+      navigate("/")
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
   return (
     <div className="text-center">
       <h2 className=" text-red-900">Login</h2>
       <div className="grid grid-cols-3 ">
         <div></div>
         <div className="">
-          <form action="">
+          <form onSubmit={handleSubmit} action="">
             <div className="block">
               <label
                 className="block text-sm font-medium text-slate-700"
@@ -21,13 +52,15 @@ function Login() {
                 id="email"
                 type="email"
                 name="email"
+                value={email}
+                onChange={(e)=>setEmail(e.target.value)}
                 required
               />
             </div>
             <div className="block">
               <label
                 className="block text-sm font-medium text-slate-700"
-                htmlFor="email"
+                htmlFor="pass"
               >
                 Password
               </label>
@@ -37,10 +70,15 @@ function Login() {
                 id="pass"
                 type="password"
                 name="password"
+                value={password}
+                onChange={(e)=>setPassword(e.target.value)}
                 required
               />
             </div>
-            <button className="mt-1 bg-orange-500 rounded-full w-24 h-8">
+            <button
+            type="submit" disabled={isLoading}
+              className="mt-1 bg-orange-500 rounded-full w-24 h-8"
+            >
               Login
             </button>
           </form>

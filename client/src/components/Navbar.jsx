@@ -6,7 +6,7 @@ function Navbar() {
       <div className="relative w-[1080px] mx-auto flex items-center justify-between">
         <Link to="/">
           <img 
-          src="./public/vite.svg" alt="logo"
+          src="/vite.svg" alt="logo"
           className="cursor-pointer py-7 pr-7"
            />
         </Link>
